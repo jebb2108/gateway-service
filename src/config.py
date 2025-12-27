@@ -38,6 +38,8 @@ class Config:
     database: DatabaseConfig = None
     tz_info: datetime = timezone(timedelta(hours=3.0))
 
+    words_ttl = timedelta(minutes=30)
+
     def __post_init__(self):
         if not self.payments: self.payments = PaymentsConfig()
         if not self.database: self.database = DatabaseConfig()

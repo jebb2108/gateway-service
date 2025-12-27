@@ -3,7 +3,9 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from src.config import config
-from src.endpoints.gateway import router
+from src.endpoints.dictionary import router as dictionary_endpoints_router
+from src.endpoints.payments import router as payment_endpoints_router
+from src.endpoints.users import router as user_endpoints_router
 
 app = FastAPI()
 app.add_middleware(
@@ -14,7 +16,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router)
+app.include_router(user_endpoints_router)
+app.include_router(payment_endpoints_router)
+app.include_router(dictionary_endpoints_router)
 
 if __name__ == '__main__':
     uvicorn.run(
