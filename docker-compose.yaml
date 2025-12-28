@@ -1,7 +1,7 @@
 services:
-  backend:
+  app:
     build: .
-    container_name: gateway-backend
+    container_name: gateway-app
     ports:
       - '${THIS_PORT}:${THIS_PORT}'
     environment:
@@ -17,8 +17,6 @@ services:
     depends_on:
       redis:
         condition: service_healthy
-    networks:
-      - gateway-network
 
   redis:
     image: redis:7-alpine
@@ -32,27 +30,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-    networks:
-      - gateway-network
-
-  gateway:
-    image: nginx:latest
-    container_name: gateway-nginx
-    restart: unless-stopped
-    ports:
-      - "8443:8443"  # HTTPS порт
-      - "8080:8080"  # HTTP порт
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-    depends_on:
-      - backend
-    networks:
-      - gateway-network
-
-networks:
-  gateway-network:
-    driver: bridge
 
 volumes:
   redis_data:
