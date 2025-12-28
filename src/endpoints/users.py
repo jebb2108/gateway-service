@@ -32,7 +32,9 @@ async def check_nickname_exists(
               f'/nickname_exists?nickname={nickname}'
         response = await client.get(url=url, timeout=5.0)
         if response.status_code == 200:
-            return response.json()
+            nickname_exists = response.json()
+            logger.info(f'nickname exists: {nickname_exists}')
+            return nickname_exists
         raise HTTPException(status_code=500, detail="Error connecting to server")
 
 
