@@ -43,8 +43,8 @@ services:
       - "8443:8443"  # HTTPS порт
       - "8080:8080"  # HTTP порт
     volumes:
-      - ./gateway/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./ssl:/etc/letsencrypt/live/gateway.lllang.site:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - gateway-network
 
