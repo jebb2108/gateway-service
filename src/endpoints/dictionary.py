@@ -1,6 +1,6 @@
 import logging
 from json import loads, dumps
-from typing import Dict
+from typing import Dict, Optional
 
 import httpx
 from fastapi import APIRouter, HTTPException
@@ -99,7 +99,7 @@ async def api_delete_word_handler(
 @router.get("/words/search")
 async def api_search_word_handler(
         word: str = Query(..., description="Слово для поиска среди пользователей"),
-        user_id: int = Query(None, description="User ID пользователя"),
+        user_id: Optional[int] = Query(None, description="User ID пользователя"),
 ):
     try:
         cached = await redis.hgetall(f'search_words:{word}:{user_id}')
