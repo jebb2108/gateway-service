@@ -102,7 +102,6 @@ async def api_search_word_handler(
         user_id: int = Query(None, description="User ID пользователя"),
 ):
     try:
-        user_id = user_id if user_id else 'null'
         cached = await redis.hgetall(f'search_words:{word}:{user_id}')
         if cached:
             return {str(key): loads(val) for key, val in cached.items()}
