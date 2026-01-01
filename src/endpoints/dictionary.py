@@ -126,6 +126,7 @@ async def api_search_word_handler(
                     await redis.hset(redis_key, mapping=mapping)
                     await redis.expire(redis_key, config.words_ttl)
 
+                logger.info('words: ', words)
                 return words
             else:
                 raise HTTPException(status_code=resp.status_code, detail=resp.text)
