@@ -12,7 +12,7 @@ from src.models import Word
 
 logger = logging.getLogger('gateway')
 
-redis = aioredis.from_url("redis://redis")
+redis = aioredis.from_url("redis://redis", decode_responses=True)
 
 router = APIRouter(prefix='/api')
 
