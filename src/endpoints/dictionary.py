@@ -99,23 +99,32 @@ async def api_delete_word_handler(
 @router.get("/words/search")
 async def api_search_word_handler(
         word: str = Query(..., description="Слово для поиска среди пользователей"),
-        user_id: Optional[int] = Query(None, description="User ID пользователя"),
+        user_id: int = Query(..., description="User ID пользователя"),
 ):
     try:
-        cached = await redis.hgetall(f'search_words:{word}:{user_id}')
+        # Создаем Redis key без user_id если он None
+        redis_key = f'search_words:{word}:{user_id if user_id else "all"}'
+        cached = await redis.hgetall(redis_key)
         if cached:
             return {str(key): loads(val) for key, val in cached.items()}
 
         # Ищем слово от пользователя
         async with httpx.AsyncClient() as client:
-            url = DATABASE_BASE_URL + config.database.prefix + f'/words/search?user_id={user_id}&word={word}'
+            # Строим URL в зависимости от наличия user_id
+            if user_id:
+                url = DATABASE_BASE_URL + config.database.prefix + \
+                    f'/words/search?user_id={user_id}&word={word}'
+            else:
+                url = DATABASE_BASE_URL + config.database.prefix + \
+                    f'/words/search?word={word}'
+            
             resp = await client.get(url=url)
             if resp.status_code == 200:
                 words = resp.json()
                 if words:
                     mapping = {key: dumps(val) for key, val in words.items()}
-                    await redis.hset(f'search_words:{word}:{user_id}', mapping=mapping)
-                    await redis.expire(f'search_words:{word}:{user_id}', config.words_ttl)
+                    await redis.hset(redis_key, mapping=mapping)
+                    await redis.expire(redis_key, config.words_ttl)
 
                 return words
             else:
