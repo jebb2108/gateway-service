@@ -103,7 +103,7 @@ async def api_search_word_handler(
 ):
     try:
         # Создаем Redis key без user_id если он None
-        redis_key = f'search_words:{word}:{user_id if user_id else "all"}'
+        redis_key = f'words:{word}:{user_id if user_id else "all"}'
         cached = await redis.hgetall(redis_key)
         if cached:
             return {str(key): loads(val) for key, val in cached.items()}
