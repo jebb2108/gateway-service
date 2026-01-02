@@ -3,7 +3,7 @@ from json import loads, dumps
 from typing import Dict, Optional
 
 import httpx
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 from fastapi.params import Query
 from redis.asyncio import Redis as aioredis
 
@@ -65,9 +65,9 @@ async def save_word_handler(word_data: Word):
             if resp.status_code == 200:
                 user_id=word_data.user_id
                 await redis.delete(f'words:{user_id}', f'stats:{user_id}')
-                return 200
+                return Response(status_code=200, content=resp.text)
 
-            else: return resp
+            return Response(content=resp.text, status_code=resp.status_code)
 
     except Exception as e:
         logger.error(f'Error in save_word_handler: {e}')
