@@ -67,10 +67,8 @@ async def save_word_handler(word_data: Word):
                 await redis.delete(f'words:{user_id}', f'stats:{user_id}')
                 return 200
 
-            else:
-                raise HTTPException(
-                    status_code=resp.status_code, detail=resp.text
-                )
+            else: return resp
+
     except Exception as e:
         logger.error(f'Error in save_word_handler: {e}')
         raise HTTPException(status_code=500, detail='Internal Server Error')
