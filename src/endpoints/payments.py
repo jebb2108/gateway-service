@@ -70,6 +70,21 @@ async def get_users_due_to_handler(user_id = Query(..., description="User ID")):
         raise HTTPException(status_code=500, detail=f"Failed to update DB: {e}")
 
 
+@router.get('/payment_data')
+async def get_payment_data_handler(
+        user_id: int = Query(..., description="User ID")
+) -> dict:
+    try:
+        async with httpx.AsyncClient() as client:
+            url = PAYMENT_BASE_URL + config.payments.handler.prefix + f'/payment_data?user_id={user_id}'
+            response = await client.get(url, timeout=5.0)
+            return response.json()
+
+    except Exception as e:
+        logger.error(f'Error in get_payment_data_handler: {e}')
+        raise HTTPException(status_code=500, detail=f"Failed to receive payment data: {e}")
+
+
 @router.get('/yookassa_link')
 async def get_yookassa_link_handler(
         user_id: int = Query(..., description="User ID")
