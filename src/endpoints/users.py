@@ -15,7 +15,9 @@ from src.models import User, Payment, Profile
 DATABASE_BASE_URL = f"http://{config.database.host}:{config.database.port}"
 PAYMENT_BASE_URL = f"http://{config.payments.host}:{config.payments.port}"
 
+# Создаем логгер для приложения
 logger = logging.getLogger('gateway')
+logger.setLevel(logging.INFO)
 
 redis = aioredis.from_url("redis://redis")
 
@@ -89,7 +91,7 @@ async def get_user_via_gateway(
                 data = resp.json()
                 mapping = {key: json.dumps(value) for key, value in data.items()}
                 await redis.hset(f'user:{user_id}:{target_field}', mapping=mapping)
-                return resp.json()
+                return data
 
             return None
 

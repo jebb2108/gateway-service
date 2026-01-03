@@ -1,3 +1,5 @@
+import logging
+
 import uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
@@ -6,6 +8,15 @@ from src.config import config
 from src.endpoints.dictionary import router as dictionary_endpoints_router
 from src.endpoints.payments import router as payment_endpoints_router
 from src.endpoints.users import router as user_endpoints_router
+
+# Настройка логирования
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+    ]
+)
 
 app = FastAPI()
 app.add_middleware(
