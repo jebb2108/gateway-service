@@ -25,7 +25,7 @@ router = APIRouter(prefix='/api')
 @router.get('/check_profile')
 async def check_profile_exists(
         user_id: int = Query(..., description="User ID")
-) -> dict[str, Any]:
+) -> bool:
     async with httpx.AsyncClient() as client:
 
         url = DATABASE_BASE_URL + config.database.prefix + \
