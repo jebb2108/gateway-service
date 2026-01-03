@@ -1,6 +1,6 @@
 [project]
 name = "x-api-service"
-version = "0.5.0"
+version = "0.6.0"
 description = "API Gateway"
 authors = [
     {name = "Gabriel Bouchard",email = "gabouchard2002@gmail.com"}
