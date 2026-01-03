@@ -1,7 +1,7 @@
 import json
 import logging
 from json import loads
-from typing import Any, Union, Dict
+from typing import Any, Union
 
 import httpx
 from fastapi import APIRouter
@@ -35,7 +35,7 @@ async def check_profile_exists(
         if resp.status_code == 200:
             profile_exists = resp.json()
             logger.info(f'profile exists: {profile_exists}')
-            return { 'exists': profile_exists }
+            return profile_exists
 
         raise HTTPException(status_code=resp.status_code, detail=resp.text)
 
