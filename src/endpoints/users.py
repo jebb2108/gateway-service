@@ -89,7 +89,7 @@ async def get_user_via_gateway(
                 data = resp.json()
                 mapping = {key: json.dumps(value) for key, value in data.items()}
                 await redis.hset(f'user:{user_id}:{target_field}', mapping=mapping)
-                return resp
+                return resp.json()
 
             return None
 
